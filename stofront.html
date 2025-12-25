@@ -1,0 +1,532 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Store | GameSystemsLab</title>
+  <meta name="description" content="Browse systems mastery manuals. Search, filter, and buy instantly via Gumroad." />
+
+  <style>
+    :root{
+      --bg:#0b0f17;
+      --panel:#101828;
+      --card:#0f172a;
+      --text:#e6eefc;
+      --muted:#a8b3c7;
+      --line:#23314d;
+      --accent:#77b0ff;
+      --accent2:#9bffd6;
+      --danger:#ff6b6b;
+      --radius:18px;
+      --shadow: 0 12px 30px rgba(0,0,0,.35);
+      --max: 1120px;
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      --sans: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family: var(--sans);
+      background: radial-gradient(1200px 600px at 20% -10%, rgba(119,176,255,.22), transparent 60%),
+                  radial-gradient(900px 500px at 90% 0%, rgba(155,255,214,.12), transparent 55%),
+                  var(--bg);
+      color:var(--text);
+      line-height:1.45;
+    }
+    a{color:inherit; text-decoration:none}
+    .wrap{max-width:var(--max); margin:0 auto; padding:28px 18px 64px;}
+    header{
+      display:flex; align-items:center; justify-content:space-between;
+      gap:16px; padding:10px 0 22px;
+    }
+    .brand{
+      display:flex; align-items:center; gap:12px;
+    }
+    .logo{
+      width:40px; height:40px; border-radius:12px;
+      background: linear-gradient(135deg, rgba(119,176,255,.9), rgba(155,255,214,.85));
+      box-shadow: var(--shadow);
+    }
+    .brand h1{font-size:18px; margin:0; letter-spacing:.2px}
+    .brand .tag{font-size:12px; color:var(--muted); margin-top:2px}
+    nav{
+      display:flex; gap:14px; flex-wrap:wrap; justify-content:flex-end;
+    }
+    nav a{
+      padding:10px 12px; border:1px solid transparent; border-radius:12px;
+      color:var(--muted);
+    }
+    nav a:hover{border-color:var(--line); color:var(--text); background: rgba(255,255,255,.03)}
+    nav a.active{border-color:rgba(119,176,255,.35); color:var(--text); background: rgba(119,176,255,.08)}
+    .hero{
+      display:flex; flex-direction:column; gap:8px;
+      background: linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.01));
+      border: 1px solid rgba(255,255,255,.06);
+      border-radius: var(--radius);
+      padding: 18px;
+      box-shadow: var(--shadow);
+    }
+    .hero .kicker{
+      font-family: var(--mono);
+      color: rgba(155,255,214,.9);
+      font-size: 12px;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+    }
+    .hero h2{margin:0; font-size:26px; letter-spacing:.2px}
+    .hero p{margin:0; color:var(--muted); max-width: 72ch}
+
+    .controls{
+      margin-top:16px;
+      display:grid;
+      grid-template-columns: 1.2fr repeat(3, .9fr) .7fr;
+      gap:10px;
+    }
+    @media (max-width: 980px){
+      .controls{grid-template-columns: 1fr 1fr; }
+    }
+    .control{
+      background: rgba(255,255,255,.03);
+      border: 1px solid rgba(255,255,255,.07);
+      border-radius: 14px;
+      padding: 10px 12px;
+      display:flex; flex-direction:column; gap:6px;
+      min-height: 56px;
+    }
+    .label{font-size:11px; color:var(--muted); letter-spacing:.06em; text-transform:uppercase}
+    input[type="search"], select{
+      width:100%;
+      border:0;
+      outline:0;
+      background: transparent;
+      color: var(--text);
+      font-size: 14px;
+      padding:0;
+    }
+    select{appearance:none}
+    .meta-row{
+      margin-top:14px;
+      display:flex; align-items:center; justify-content:space-between;
+      gap:10px; flex-wrap:wrap;
+    }
+    .pill{
+      display:inline-flex; align-items:center; gap:8px;
+      padding: 8px 10px;
+      border-radius: 999px;
+      border:1px solid rgba(255,255,255,.08);
+      background: rgba(255,255,255,.03);
+      color: var(--muted);
+      font-size: 13px;
+    }
+    .btn{
+      cursor:pointer;
+      border:1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.04);
+      color: var(--text);
+      padding: 9px 12px;
+      border-radius: 12px;
+      font-size: 13px;
+    }
+    .btn:hover{border-color: rgba(119,176,255,.35); background: rgba(119,176,255,.08)}
+    .btn:active{transform: translateY(1px)}
+    .grid{
+      margin-top:18px;
+      display:grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap:14px;
+    }
+    @media (max-width: 980px){ .grid{grid-template-columns: repeat(2, 1fr);} }
+    @media (max-width: 620px){ .grid{grid-template-columns: 1fr;} }
+
+    .card{
+      background: linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.015));
+      border: 1px solid rgba(255,255,255,.07);
+      border-radius: var(--radius);
+      overflow:hidden;
+      box-shadow: var(--shadow);
+      display:flex;
+      flex-direction:column;
+      min-height: 340px;
+    }
+    .cover{
+      height: 160px;
+      background: linear-gradient(135deg, rgba(119,176,255,.16), rgba(155,255,214,.10));
+      border-bottom: 1px solid rgba(255,255,255,.06);
+      position:relative;
+      display:flex;
+      align-items:flex-end;
+      padding: 14px;
+    }
+    .cover .badge{
+      font-family: var(--mono);
+      font-size: 11px;
+      color: rgba(230,238,252,.95);
+      background: rgba(0,0,0,.35);
+      border: 1px solid rgba(255,255,255,.08);
+      padding: 6px 8px;
+      border-radius: 999px;
+    }
+    .content{padding:14px; display:flex; flex-direction:column; gap:10px; flex:1}
+    .title{font-size:16px; margin:0; letter-spacing:.2px}
+    .sub{margin:0; color:var(--muted); font-size: 13px}
+    .tags{display:flex; gap:6px; flex-wrap:wrap}
+    .tagchip{
+      font-size:12px;
+      color: rgba(230,238,252,.92);
+      border:1px solid rgba(255,255,255,.08);
+      background: rgba(255,255,255,.03);
+      padding: 6px 8px;
+      border-radius: 999px;
+    }
+    .foot{
+      padding:14px;
+      border-top:1px solid rgba(255,255,255,.06);
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+    }
+    .price-row{display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap}
+    .price{
+      font-family: var(--mono);
+      font-size: 13px;
+      color: rgba(155,255,214,.92);
+    }
+    .actions{display:flex; gap:8px; flex-wrap:wrap}
+    .buy{
+      display:inline-flex; align-items:center; justify-content:center;
+      gap:8px;
+      padding: 9px 10px;
+      border-radius: 12px;
+      border: 1px solid rgba(119,176,255,.35);
+      background: rgba(119,176,255,.10);
+      color: var(--text);
+      font-size: 13px;
+      min-width: 92px;
+    }
+    .buy:hover{background: rgba(119,176,255,.16)}
+    .buy.secondary{
+      border-color: rgba(255,255,255,.10);
+      background: rgba(255,255,255,.04);
+    }
+    .buy.secondary:hover{border-color: rgba(155,255,214,.28); background: rgba(155,255,214,.08)}
+    footer{
+      margin-top:26px;
+      color: var(--muted);
+      font-size: 13px;
+      border-top: 1px solid rgba(255,255,255,.06);
+      padding-top: 18px;
+      display:flex;
+      justify-content:space-between;
+      gap:10px;
+      flex-wrap:wrap;
+    }
+    .fine{max-width: 90ch}
+    .mono{font-family: var(--mono)}
+  </style>
+</head>
+
+<body>
+  <div class="wrap">
+    <header>
+      <div class="brand">
+        <div class="logo" aria-hidden="true"></div>
+        <div>
+          <h1>GameSystemsLab</h1>
+          <div class="tag">Browse-first catalog of systems mastery manuals</div>
+        </div>
+      </div>
+      <nav aria-label="Primary">
+        <a href="/" >Home</a>
+        <a class="active" href="/store/">Store</a>
+        <a href="/collections/">Collections</a>
+        <a href="/systems/">Systems</a>
+        <a href="/bundles/">Bundles</a>
+        <a href="/new/">New</a>
+        <a href="/support/">Support</a>
+      </nav>
+    </header>
+
+    <section class="hero">
+      <div class="kicker">STORE</div>
+      <h2>Find the right manual fast.</h2>
+      <p>
+        Search and filter by <span class="mono">collection</span>, <span class="mono">system focus</span>, and <span class="mono">format</span>.
+        Each manual includes a Companion Assistant link (optional) to help you navigate the guide while you play.
+      </p>
+
+      <div class="controls" role="region" aria-label="Store filters">
+        <div class="control">
+          <div class="label">Search</div>
+          <input id="q" type="search" placeholder="Try: tactics, action economy, builds, economy…" autocomplete="off" />
+        </div>
+
+        <div class="control">
+          <div class="label">Collection</div>
+          <select id="collection">
+            <option value="">All</option>
+          </select>
+        </div>
+
+        <div class="control">
+          <div class="label">System Focus</div>
+          <select id="systemFocus">
+            <option value="">All</option>
+          </select>
+        </div>
+
+        <div class="control">
+          <div class="label">Format</div>
+          <select id="format">
+            <option value="">All</option>
+          </select>
+        </div>
+
+        <div class="control">
+          <div class="label">Sort</div>
+          <select id="sort">
+            <option value="newest">Newest</option>
+            <option value="az">A–Z</option>
+            <option value="priceLow">Price: low → high</option>
+            <option value="priceHigh">Price: high → low</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="meta-row">
+        <div class="pill"><span class="mono" id="count">0</span> results</div>
+        <button class="btn" id="clear">Clear filters</button>
+      </div>
+    </section>
+
+    <section class="grid" id="grid" aria-label="Product results"></section>
+
+    <footer>
+      <div class="fine">
+        <div><strong>Delivery:</strong> checkout via Gumroad, instant downloads.</div>
+        <div>These are independent guides (not affiliated with game publishers). No spoilers, no leaked content.</div>
+      </div>
+      <div class="mono">GameSystemsLab.com</div>
+    </footer>
+  </div>
+
+  <script>
+    /**
+     * Phase 1: Inline catalog.
+     * Phase 2 (next): move this into /assets/data/products.json and fetch it.
+     */
+    const PRODUCTS = [
+      {
+        id: "vagrus-systems-mastery",
+        title: "Vagrus – The Riven Realms Systems Mastery Manual",
+        slug: "vagrus-riven-realms-systems-mastery",
+        blurb: "Decision loops, party logistics, economy pressure, and build planning—explained as a system.",
+        releaseDate: "2025-12-10",
+        collection: "RPG Strategy",
+        systemFocus: ["Economy", "Build Planning", "Progression"],
+        format: "PDF",
+        minPrice: 19,
+        coverLabel: "PDF + Companion",
+        buy: {
+          starter: "https://gumroad.com/l/REPLACE_STARTER",
+          pro: "https://gumroad.com/l/REPLACE_PRO",
+          elite: "https://gumroad.com/l/REPLACE_ELITE"
+        }
+      },
+      {
+        id: "xcom2-systems-mastery",
+        title: "XCOM 2 Systems Mastery Manual",
+        slug: "xcom-2-systems-mastery",
+        blurb: "Action economy, turn order leverage, squad roles, and campaign pacing—without walkthrough noise.",
+        releaseDate: "2025-12-12",
+        collection: "Turn-Based Tactics",
+        systemFocus: ["Action Economy", "Tactics", "Campaign Layer"],
+        format: "PDF",
+        minPrice: 19,
+        coverLabel: "Tactics Core",
+        buy: { starter: "https://gumroad.com/l/REPLACE_STARTER", pro: "", elite: "" }
+      },
+      {
+        id: "rogue-trader-systems-mastery",
+        title: "Warhammer 40,000: Rogue Trader Systems Mastery Manual",
+        slug: "rogue-trader-systems-mastery",
+        blurb: "Party composition, stacking effects, resource flow, and encounter planning—mapped into repeatable rules.",
+        releaseDate: "2025-12-15",
+        collection: "CRPG Systems",
+        systemFocus: ["Build Planning", "Status Effects", "Combat Flow"],
+        format: "PDF",
+        minPrice: 19,
+        coverLabel: "CRPG Systems",
+        buy: { starter: "https://gumroad.com/l/REPLACE_STARTER", pro: "", elite: "" }
+      },
+      {
+        id: "systems-toolkit",
+        title: "Universal Systems Mastery Toolkit",
+        slug: "universal-systems-mastery-toolkit",
+        blurb: "A franchise-neutral framework to analyze any strategy game: action economy, tempo, scaling, risk loops.",
+        releaseDate: "2025-12-20",
+        collection: "Frameworks",
+        systemFocus: ["Systems Literacy", "Decision Models", "Meta Skills"],
+        format: "PDF + Templates",
+        minPrice: 29,
+        coverLabel: "Framework",
+        buy: { starter: "https://gumroad.com/l/REPLACE_STARTER", pro: "", elite: "" }
+      }
+    ];
+
+    const $ = (id) => document.getElementById(id);
+
+    const state = {
+      q: "",
+      collection: "",
+      systemFocus: "",
+      format: "",
+      sort: "newest"
+    };
+
+    function uniq(values){
+      return [...new Set(values)].sort((a,b)=>a.localeCompare(b));
+    }
+
+    function populateSelect(selectEl, options){
+      for (const opt of options){
+        const o = document.createElement("option");
+        o.value = opt;
+        o.textContent = opt;
+        selectEl.appendChild(o);
+      }
+    }
+
+    function setupFilters(){
+      populateSelect($("collection"), uniq(PRODUCTS.map(p=>p.collection)));
+      populateSelect($("format"), uniq(PRODUCTS.map(p=>p.format)));
+      populateSelect($("systemFocus"), uniq(PRODUCTS.flatMap(p=>p.systemFocus)));
+    }
+
+    function matches(p){
+      const q = state.q.trim().toLowerCase();
+      const hay = [
+        p.title, p.blurb, p.collection, p.format, ...(p.systemFocus||[])
+      ].join(" ").toLowerCase();
+
+      if (q && !hay.includes(q)) return false;
+      if (state.collection && p.collection !== state.collection) return false;
+      if (state.format && p.format !== state.format) return false;
+      if (state.systemFocus && !(p.systemFocus||[]).includes(state.systemFocus)) return false;
+      return true;
+    }
+
+    function sortProducts(list){
+      const s = state.sort;
+      const copy = [...list];
+
+      if (s === "newest"){
+        copy.sort((a,b)=> new Date(b.releaseDate) - new Date(a.releaseDate));
+      } else if (s === "az"){
+        copy.sort((a,b)=> a.title.localeCompare(b.title));
+      } else if (s === "priceLow"){
+        copy.sort((a,b)=> (a.minPrice||0) - (b.minPrice||0));
+      } else if (s === "priceHigh"){
+        copy.sort((a,b)=> (b.minPrice||0) - (a.minPrice||0));
+      }
+      return copy;
+    }
+
+    function buyButtons(p){
+      // Only render buttons that have links.
+      const btns = [];
+      if (p.buy?.starter) btns.push(`<a class="buy" href="${p.buy.starter}" target="_blank" rel="noopener">Buy Starter</a>`);
+      if (p.buy?.pro) btns.push(`<a class="buy secondary" href="${p.buy.pro}" target="_blank" rel="noopener">Buy Pro</a>`);
+      if (p.buy?.elite) btns.push(`<a class="buy secondary" href="${p.buy.elite}" target="_blank" rel="noopener">Buy Elite</a>`);
+      if (btns.length === 0) btns.push(`<span class="pill">Coming soon</span>`);
+      return btns.join("");
+    }
+
+    function card(p){
+      const tags = [
+        p.collection,
+        ...p.systemFocus.slice(0,3),
+        p.format
+      ];
+
+      return `
+        <article class="card">
+          <div class="cover">
+            <span class="badge">${escapeHtml(p.coverLabel || "Manual")}</span>
+          </div>
+          <div class="content">
+            <h3 class="title">
+              <a href="/guides/${encodeURIComponent(p.slug)}/">${escapeHtml(p.title)}</a>
+            </h3>
+            <p class="sub">${escapeHtml(p.blurb)}</p>
+            <div class="tags">
+              ${tags.map(t=>`<span class="tagchip">${escapeHtml(t)}</span>`).join("")}
+            </div>
+          </div>
+          <div class="foot">
+            <div class="price-row">
+              <div class="price">From $${Number(p.minPrice||0).toFixed(0)}</div>
+              <div class="pill">Released <span class="mono">${escapeHtml(p.releaseDate)}</span></div>
+            </div>
+            <div class="actions">
+              <a class="btn" href="/guides/${encodeURIComponent(p.slug)}/">View details</a>
+              ${buyButtons(p)}
+            </div>
+          </div>
+        </article>
+      `;
+    }
+
+    function escapeHtml(str){
+      return String(str)
+        .replaceAll("&","&amp;")
+        .replaceAll("<","&lt;")
+        .replaceAll(">","&gt;")
+        .replaceAll('"',"&quot;")
+        .replaceAll("'","&#039;");
+    }
+
+    function render(){
+      const filtered = PRODUCTS.filter(matches);
+      const sorted = sortProducts(filtered);
+
+      $("count").textContent = sorted.length;
+
+      const grid = $("grid");
+      grid.innerHTML = sorted.map(card).join("");
+
+      // If empty, show a friendly message
+      if (sorted.length === 0){
+        grid.innerHTML = `
+          <div class="hero" style="grid-column: 1 / -1;">
+            <div class="kicker">NO MATCHES</div>
+            <h2 style="margin:0">Nothing matched those filters.</h2>
+            <p style="margin:0;color:var(--muted)">Try clearing filters or searching a broader term like <span class="mono">tactics</span> or <span class="mono">economy</span>.</p>
+          </div>
+        `;
+      }
+    }
+
+    function bind(){
+      $("q").addEventListener("input", (e)=>{ state.q = e.target.value; render(); });
+      $("collection").addEventListener("change", (e)=>{ state.collection = e.target.value; render(); });
+      $("systemFocus").addEventListener("change", (e)=>{ state.systemFocus = e.target.value; render(); });
+      $("format").addEventListener("change", (e)=>{ state.format = e.target.value; render(); });
+      $("sort").addEventListener("change", (e)=>{ state.sort = e.target.value; render(); });
+
+      $("clear").addEventListener("click", ()=>{
+        state.q = ""; state.collection=""; state.systemFocus=""; state.format=""; state.sort="newest";
+        $("q").value = "";
+        $("collection").value = "";
+        $("systemFocus").value = "";
+        $("format").value = "";
+        $("sort").value = "newest";
+        render();
+      });
+    }
+
+    setupFilters();
+    bind();
+    render();
+  </script>
+</body>
+</html>
